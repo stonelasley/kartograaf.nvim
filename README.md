@@ -6,10 +6,10 @@ in lua and nvim, something I have never done before.
 
 ```viml
 vim.api.nvim_set_keymap('i', 'jk', '<Esc', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>tw', '<cmd>Trouble lsp_workspace_diagnostics<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'gd,  '<Plug>(omnisharp_go_to_definition)', { noremap = false })
+vim.api.nvim_set_keymap('n', 'gi  '<Plug>(omnisharp_find_implementations)', { noremap = false })
+vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
 
 ```
 becomes
@@ -19,11 +19,19 @@ require('kartograaf').map({
     { 'jk', '<Esc>' },
   },
   n = {
+    {
+      prefix = '<leader>',
+      { 'tw', '<cmd>Trouble lsp_workspace_diagnostics<CR>'}, { silent = true},
+    },
+    {
+      options = { noremap = false },
+      prefix = 'g',
+      { 'd', '<Plug>(omnisharp_go_to_definition)'},
+      { 'i', '<Plug>(omnisharp_find_implementations)'},
+    },
+    {
       mod = 'C',
-      { 'h', '<C-w>h' },
-      { 'j', '<C-w>j' },
-      { 'k', '<C-w>k' },
-      { 'l', '<C-w>l', { silent = true} },
+      { 'k', '<C-w>k' }
     }
   }
 })
@@ -56,7 +64,7 @@ Looking through the tests will also help
 ```lua
 require('kartograaf').map({
   i = {
-    options = { noremap = false },
+    options = { noremap = false }, -- set to all maps in this mode, merged with higher options
     { 'jk', '<Esc>' }, --api.nvim_set_keymap('i', 'jk', '<Esc>', { noremap = false })
   },
   n = {
@@ -67,6 +75,7 @@ require('kartograaf').map({
     {
       mod = 'C',
       { 'h', '<C-w>h' }, -- api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true })
+      { 'l', '<C-w>l' }, -- api.nvim_set_keymap('n', '<C-l>', '<C-w>l, { noremap = true })
     },
     {
       mod = 'M',
@@ -74,7 +83,8 @@ require('kartograaf').map({
     }
   },
   c = {
-    { 'w!!', 'w !sudo tee %'}
+    options = { silent = true }
+    { 'w!!', 'w !sudo tee %'} -- api.nvim_set_keymap('c', 'w!!', 'w !sudo tee %', { silent = true })
   }
 })
 ```
@@ -101,12 +111,12 @@ require('kartograaf').map({
   debug = true, -- prints out map statements
   i = {
     options = { noremap = false },
-    { 'jk', '<Esc>' }, --api.nvim_buf_set_keymap(1234, 'i', 'jk', '<Esc>', { noremap = false })
+    { 'jk', '<Esc>' }, --print('api.nvim_set_keymap('i', 'jk', '<Esc>', { noremap = false })')
   },
   n = {
     buffer = 456,
     mod = 'C',
-    { 'h', '<C-w>h' }, --api.nvim_buf_set_keymap(456, 'n', '<C-h>', '<C-w>h', { noremap = true})
+    { 'h', '<C-w>h' }, --print('api.nvim_buf_set_keymap(456, 'n', '<C-h>', '<C-w>h', { noremap = true})')
   } 
 })
 ```
@@ -116,6 +126,6 @@ require('kartograaf').map({
   'nvim-lua/plenary.nvim' (to run tests)
   
 ## Credits
-This plugin was influenced by (lionc/nest.nvim)[https://github.com/lionc/nest.nvim]. I like the idea 
+This plugin was influenced by [lionc/nest.nvim](https://github.com/lionc/nest.nvim). I like the idea 
 of nest's configuration but I was running into issues debugging setup and then ran into bigger 
 issues modifying it to set buffer keymaps. And here we are.
