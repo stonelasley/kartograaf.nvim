@@ -1,8 +1,8 @@
 local mock = require('luassert.mock')
 
-describe("cartographer", function()
+describe("Kartograaf", function()
 
-  local cut = require('kartograaf')
+  local cut = require('../lua/kartograaf')
 
   describe("map", function()
     it("Should call nvim_set_keymap", function()
@@ -140,7 +140,6 @@ describe("cartographer", function()
     it("Should allow setting buffer", function()
       local mappings = {
         buffer = 456,
-        debug = true,
         i = {
           {
             prefix = '<leader>',
@@ -161,7 +160,6 @@ describe("cartographer", function()
             mod = 'C',
             { 'x', 'rx'},
           },
-
           {'<C-r><C-r>', [[xyz]]},
         }
       }
@@ -170,7 +168,7 @@ describe("cartographer", function()
 
       cut.map(mappings)
 
-      assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'i', '<leader><leader>l', 'lrx', { noremap = true })
+      assert.stub(api.nvim_buf_set_keymap).was_called_with(456, 'i', '<leader><leader>l', 'lrx', { noremap = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(456, 'n', '<leader><leader>l', 'lrx', { noremap = true, silent = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(456, 'n', '<C-x>', 'rx', { noremap = true, silent = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(456, 'n', 'gD', 'rgx', { noremap = true, silent = true })
@@ -180,6 +178,7 @@ describe("cartographer", function()
 
     it("Should allow setting buffer at mode level", function()
       local mappings = {
+        buffer = 0,
         n = {
           options = { silent = true},
           buffer = 123,
@@ -208,7 +207,7 @@ describe("cartographer", function()
       assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'n', '<leader><leader>l', 'lrx', { noremap = true, silent = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'n', '<C-x>', 'rx', { noremap = true, silent = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'n', 'gD', 'rgx', { noremap = true, silent = true })
-      assert.stub(api.nvim_buf_set_keymap).was_called_with('i', 'xd', 'r', { noremap = true })
+      assert.stub(api.nvim_buf_set_keymap).was_called_with(0, 'i', 'xd', 'r', { noremap = true })
       mock.revert(api)
     end)
 

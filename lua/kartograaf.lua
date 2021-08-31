@@ -18,14 +18,13 @@ local is_table = function(val)
 end
 
 local v = function(buffer, mode, lhs, rhs, map_options)
-  print('V')
-  --if M.debug then
+  if M.debug then
     if buffer == nil then
       print('vim.api.nvim_set_keymap('..mode..', '..lhs..', '..rhs..', '..vim.inspect(map_options, { newline = ''})..')')
     else
       print('vim.api.nvim_buf_set_keymap('..buffer..', '..mode..', '..lhs..', '..rhs..', '.. vim.inspect(map_options, { newline = ''})..')')
     end
-  --end
+  end
 end
 
 local prep_lhs = function (lhs, mod, prefix)
@@ -95,7 +94,7 @@ function M.map(mappings)
       goto continue
     end
     local mode_opts = M.merge_table(options, modemaps.options)
-    buffer = set_if_not_nil(buffer, modemaps.buffer)
+    local scoped_buffer = set_if_not_nil(buffer, modemaps.buffer)
 
     for _, mapgroup in pairs(modemaps) do
 
@@ -107,12 +106,12 @@ function M.map(mappings)
       local prefix = mapgroup.prefix
       local group_opts = M.merge_table(mode_opts, mapgroup.options)
       if M.is_map(mapgroup) then
-        map_tuple(mode, mapgroup, prefix, group_opts, mod, buffer)
+        map_tuple(mode, mapgroup, prefix, group_opts, mod, scoped_buffer)
       else
         for _, map in pairs(mapgroup) do
           if M.is_map(map) then
             local map_opts = M.merge_table(group_opts, map[3])
-            map_tuple(mode, map, prefix, map_opts, mod, buffer)
+            map_tuple(mode, map, prefix, map_opts, mod, scoped_buffer)
           end
         end
       end
