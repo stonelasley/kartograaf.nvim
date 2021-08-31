@@ -18,13 +18,14 @@ local is_table = function(val)
 end
 
 local v = function(buffer, mode, lhs, rhs, map_options)
-  if M.debug then
+  print('V')
+  --if M.debug then
     if buffer == nil then
       print('vim.api.nvim_set_keymap('..mode..', '..lhs..', '..rhs..', '..vim.inspect(map_options, { newline = ''})..')')
     else
       print('vim.api.nvim_buf_set_keymap('..buffer..', '..mode..', '..lhs..', '..rhs..', '.. vim.inspect(map_options, { newline = ''})..')')
     end
-  end
+  --end
 end
 
 local prep_lhs = function (lhs, mod, prefix)
@@ -82,9 +83,10 @@ function M.merge_table(target, source)
 end
 
 function M.map(mappings)
+  local buffer
   if mappings.debug ~= nil then M.debug = mappings.debug end
+  if mappings.buffer ~= nil then buffer = mappings.buffer end
   local options = M.merge_table(M.default_options, mappings.options)
-  local buffer = mappings.buffer
 
 
   for mode, modemaps in pairs(mappings) do

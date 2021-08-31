@@ -1,10 +1,8 @@
 local mock = require('luassert.mock')
---local reload = require('plenary').replace
 
 describe("cartographer", function()
 
   local cut = require('kartograaf')
-
 
   describe("map", function()
     it("Should call nvim_set_keymap", function()
@@ -142,9 +140,8 @@ describe("cartographer", function()
     it("Should allow setting buffer", function()
       local mappings = {
         buffer = 456,
-        --debug = true,
+        debug = true,
         i = {
-          buffer = 123,
           {
             prefix = '<leader>',
             { '<leader>l', 'lrx'},
@@ -198,8 +195,9 @@ describe("cartographer", function()
             mod = 'C',
             { 'x', 'rx'},
           },
-
-          --{ '<C-r><C-r>', [[xyz]]},
+        },
+        i = {
+          { 'xd', 'r'}
         }
       }
 
@@ -210,7 +208,7 @@ describe("cartographer", function()
       assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'n', '<leader><leader>l', 'lrx', { noremap = true, silent = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'n', '<C-x>', 'rx', { noremap = true, silent = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'n', 'gD', 'rgx', { noremap = true, silent = true })
-      --assert.stub(api.nvim_buf_set_keymap).was_called_with(123, 'i', 'xd', 'r', { noremap = true })
+      assert.stub(api.nvim_buf_set_keymap).was_called_with('i', 'xd', 'r', { noremap = true })
       mock.revert(api)
     end)
 
@@ -248,6 +246,23 @@ describe("cartographer", function()
       mock.revert(api)
     end)
 
+    -- it("Should allow double bindings with modifier", function()
+    --   local maps = {
+    --     n = {
+    --       {
+    --         mod = 'C',
+    --         { 'h', '<C-w>h' }
+    --       }
+    --     }
+    --   }
 
-            end)
-          end)
+    --   local api = mock(vim.api, true)
+
+    --   cut.map(maps)
+
+    --   assert.stub(api.nvim_set_keymap).was_called_with('n', '<C-h>', '<C-w>h', { noremap = true })
+    --   mock.revert(api)
+    -- end)
+
+  end)
+end)
