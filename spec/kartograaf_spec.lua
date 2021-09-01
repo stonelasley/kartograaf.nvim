@@ -245,23 +245,28 @@ describe("Kartograaf", function()
       mock.revert(api)
     end)
 
-    -- it("Should allow double bindings with modifier", function()
-    --   local maps = {
-    --     n = {
-    --       {
-    --         mod = 'C',
-    --         { 'h', '<C-w>h' }
-    --       }
-    --     }
-    --   }
+    it("Should allow double bindings with modifier", function()
+      local maps = {
+        debug = true,
+        n = {
+          { 'lhsa', 'rxl' },
+          { 'lhs', 'rxs' },
+          {
+            mod = 'C',
+            { 'h,l', 'rhs' }
+          }
+        }
+      }
 
-    --   local api = mock(vim.api, true)
+      local api = mock(vim.api, true)
 
-    --   cut.map(maps)
+      cut.map(maps)
 
-    --   assert.stub(api.nvim_set_keymap).was_called_with('n', '<C-h>', '<C-w>h', { noremap = true })
-    --   mock.revert(api)
-    -- end)
+      assert.stub(api.nvim_set_keymap).was_called_with('n', 'lhsa', 'rxl', { noremap = true })
+      assert.stub(api.nvim_set_keymap).was_called_with('n', 'lhs', 'rxs', { noremap = true })
+      assert.stub(api.nvim_set_keymap).was_called_with('n', '<C-h><C-l>', 'rhs', { noremap = true })
+      mock.revert(api)
+    end)
 
   end)
 end)

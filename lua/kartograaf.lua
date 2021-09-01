@@ -17,6 +17,17 @@ local is_table = function(val)
     return false
 end
 
+local split = function(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+  local t= {}
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+    table.insert(t, str)
+  end
+  return t
+end
+
 local v = function(buffer, mode, lhs, rhs, map_options)
   if M.debug then
     if buffer == nil then
@@ -29,7 +40,12 @@ end
 
 local prep_lhs = function (lhs, mod, prefix)
   if mod ~= nil then
-    lhs = '<'..mod..'-'..lhs..'>'
+    local mod_split = split(lhs, ',')
+    if mod_split[2] == nil then
+      lhs = '<'..mod..'-'..lhs..'>'
+    else
+      lhs = '<'..mod..'-'..mod_split[1]..'><'..mod..'-'..mod_split[2]..'>'
+    end
   end
   if prefix ~= nil then
     lhs = prefix..lhs

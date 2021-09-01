@@ -10,9 +10,9 @@ vim.api.nvim_set_keymap('n', '<leader>tw', '<cmd>Trouble lsp_workspace_diagnosti
 vim.api.nvim_set_keymap('n', 'gd,  '<Plug>(omnisharp_go_to_definition)', { noremap = false })
 vim.api.nvim_set_keymap('n', 'gi  '<Plug>(omnisharp_find_implementations)', { noremap = false })
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
-
+vim.api.nvim_set_keymap('n', '<C-r><C-r>', '<C-w>l', { noremap = true, silent = true })
 ```
-becomes
+####becomes
 ```lua
 require('kartograaf').map({
   i = {
@@ -31,7 +31,8 @@ require('kartograaf').map({
     },
     {
       mod = 'C',
-      { 'k', '<C-w>k' }
+      { 'k', '<C-w>k' },
+      { 'r,r', '<C-w>l' }
     }
   }
 })
