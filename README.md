@@ -58,10 +58,12 @@ use {
   'stonelasley/kartograaf.nvim',
 }
 ```
+
+### Examples
+  - [Tests](https://github.com/stonelasley/kartograaf.nvim/blob/main/spec/kartograaf_spec.lua)
+  - [My Dotfiles](https://github.com/stonelasley/st1/tree/master/nvim/lua/mappings)
+
 ### Usage
-
-Looking through the tests will also help
-
 ```lua
 require('kartograaf').map({
   i = {
@@ -108,18 +110,7 @@ require('kartograaf').map({
 
 #### Debugging
 ```lua
-require('kartograaf').map({
-  debug = true, -- prints out map statements
-  i = {
-    options = { noremap = false },
-    { 'jk', '<Esc>' }, --print('api.nvim_set_keymap('i', 'jk', '<Esc>', { noremap = false })')
-  },
-  n = {
-    buffer = 456,
-    mod = 'C',
-    { 'h', '<C-w>h' }, --print('api.nvim_buf_set_keymap(456, 'n', '<C-h>', '<C-w>h', { noremap = true})')
-  } 
-})
+require('kartograaf').setup({ debug = true }) -- prints out map statements
 ```
 
 ### Development dependencies

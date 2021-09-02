@@ -10,7 +10,6 @@ describe("Kartograaf", function()
       maps['i'] = { { 'l', 'r' } }
       maps['n'] = maps['i']
 
-
       local api = mock(vim.api, true)
 
       cut.map(maps)
@@ -21,19 +20,18 @@ describe("Kartograaf", function()
     end)
 
     it("Should map with modifiers", function()
-      local maps = {}
-      maps['n'] = {
-        {
-          mod = 'C',
-          { 'l', 'r' },
-          { 'a', 'x' }
-        }
-      }
-
-
       local api = mock(vim.api, true)
 
-      cut.map(maps)
+      cut.map({
+        n = {
+          {
+            mod = 'C',
+            { 'l', 'r' },
+            { 'a', 'x' }
+          }
+        }
+      }
+)
 
       assert.stub(api.nvim_set_keymap).was_called_with('n', '<C-l>', 'r', { noremap = true })
       assert.stub(api.nvim_set_keymap).was_called_with('n', '<C-a>', 'x', { noremap = true })
@@ -249,8 +247,6 @@ describe("Kartograaf", function()
       local maps = {
         debug = true,
         n = {
-          { 'lhsa', 'rxl' },
-          { 'lhs', 'rxs' },
           {
             mod = 'C',
             { 'h,l', 'rhs' }
@@ -262,8 +258,6 @@ describe("Kartograaf", function()
 
       cut.map(maps)
 
-      assert.stub(api.nvim_set_keymap).was_called_with('n', 'lhsa', 'rxl', { noremap = true })
-      assert.stub(api.nvim_set_keymap).was_called_with('n', 'lhs', 'rxs', { noremap = true })
       assert.stub(api.nvim_set_keymap).was_called_with('n', '<C-h><C-l>', 'rhs', { noremap = true })
       mock.revert(api)
     end)
